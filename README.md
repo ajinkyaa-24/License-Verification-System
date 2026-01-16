@@ -22,7 +22,6 @@ For testing and demonstration purposes, use the following credentials:
 - **Officer ID:** officer101  
 - **Password:** password123  
 
-> ⚠️ These credentials are strictly for demo/testing purposes and do not provide access to real or sensitive data.
 
 ---
 
