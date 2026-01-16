@@ -60,15 +60,15 @@ React Frontend | v AWS API Gateway | v AWS Lambda | v DynamoDB
 ## Project Structure
 
 License-Verification-System/ 
-│ 
-├── public/ 
-├── src/ │ 
-├── LoginPage.js │ 
-├── App.js 
-│ └── index.js 
-├── package.json 
-├── package-lock.json 
-├── .gitignore 
+│
+├── public/
+├── src/
+├── LoginPage.js
+├── App.js
+│ └── index.js
+├── package.json
+├── package-lock.json
+├── .gitignore
 └── README.md
 
 ---
