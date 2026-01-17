@@ -29,27 +29,41 @@ const LoginPage = ({ onLogin }) => {
     setLoggingIn(true);
     setError(null);
 
+    const API_BASE = process.env.REACT_APP_API_URL;
+
+    // 🔴 SAFETY CHECK (prevents undefined/login bug)
+    if (!API_BASE) {
+      setError("API configuration missing. Please contact admin.");
+      setLoggingIn(false);
+      return;
+    }
+
+    console.log("LOGIN API:", `${API_BASE}/login`);
+
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Cache-Control": "no-store",
-          },
-          body: JSON.stringify({
-            officerId: officerId.trim(),
-            password: password.trim(),
-          }),
-        }
-      );
+      const response = await fetch(`${API_BASE}/login`, {
+        method: "POST",
+        mode: "cors",          // ✅ explicit CORS
+        cache: "no-store",     // ✅ prevent 304 / preview cache issues
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          officerId: officerId.trim(),
+          password: password.trim(),
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Invalid Officer ID or Password");
       }
 
       const data = await response.json();
+
+      if (!data || data.success === false) {
+        throw new Error("Invalid Officer ID or Password");
+      }
+
       onLogin(data);
     } catch (err) {
       setError(err.message || "Login failed");
@@ -70,7 +84,7 @@ const LoginPage = ({ onLogin }) => {
         alignItems: "center",
         justifyContent: "center",
         background: `linear-gradient(135deg, ${deepBlue}, ${darkCoral})`,
-        px: { xs: 1.5, sm: 0 }, // mobile side padding
+        px: { xs: 1.5, sm: 0 },
       }}
     >
       <Fade in timeout={600}>
@@ -78,8 +92,8 @@ const LoginPage = ({ onLogin }) => {
           elevation={12}
           sx={{
             width: "100%",
-            maxWidth: { xs: "100%", sm: 420 }, // ✅ mobile friendly
-            p: { xs: 2.5, sm: 4 },              // ✅ less padding on mobile
+            maxWidth: { xs: "100%", sm: 420 },
+            p: { xs: 2.5, sm: 4 },
             borderRadius: { xs: 3, sm: 4 },
             background: white,
           }}
@@ -97,19 +111,16 @@ const LoginPage = ({ onLogin }) => {
                 justifyContent: "center",
               }}
             >
-              <Person
-                sx={{ fontSize: { xs: 32, sm: 42 }, color: white }}
-              />
+              <Person sx={{ fontSize: { xs: 32, sm: 42 }, color: white }} />
             </Box>
           </Box>
 
-          {/* Title */}
           <Typography
             align="center"
             sx={{
               color: deepBlue,
               fontWeight: 700,
-              fontSize: { xs: "1.5rem", sm: "2.1rem" }, // ✅ responsive font
+              fontSize: { xs: "1.5rem", sm: "2.1rem" },
             }}
           >
             Officer Login
@@ -126,7 +137,6 @@ const LoginPage = ({ onLogin }) => {
             Enter your credentials to continue
           </Typography>
 
-          {/* Officer ID */}
           <TextField
             label="Officer ID"
             fullWidth
@@ -149,7 +159,6 @@ const LoginPage = ({ onLogin }) => {
             }}
           />
 
-          {/* Password */}
           <TextField
             label="Password"
             type={showPassword ? "text" : "password"}
@@ -170,11 +179,7 @@ const LoginPage = ({ onLogin }) => {
                     size="small"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? (
-                      <VisibilityOff />
-                    ) : (
-                      <Visibility />
-                    )}
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
               ),
@@ -190,16 +195,12 @@ const LoginPage = ({ onLogin }) => {
           {error && (
             <Typography
               color="error"
-              sx={{
-                mt: 1.5,
-                fontSize: { xs: "0.8rem", sm: "0.9rem" },
-              }}
+              sx={{ mt: 1.5, fontSize: { xs: "0.8rem", sm: "0.9rem" } }}
             >
               {error}
             </Typography>
           )}
 
-          {/* Button */}
           <Button
             fullWidth
             variant="contained"
