@@ -12,9 +12,9 @@ import {
 } from "@mui/material";
 import { Person, Visibility, VisibilityOff, Lock } from "@mui/icons-material";
 
-// Darker, more professional color scheme
-const deepBlue = "#1e3a8a"; // Dark blue
-const darkCoral = "#dc2626"; // Dark red/coral
+// Color scheme
+const deepBlue = "#1e3a8a";
+const darkCoral = "#dc2626";
 const white = "#fff";
 const softGray = "#f8fafc";
 
@@ -31,32 +31,35 @@ const LoginPage = ({ onLogin }) => {
 
     try {
       const response = await fetch(
-        "https://4yjyazuj2j.execute-api.us-east-1.amazonaws.com/login",
+        `${process.env.REACT_APP_API_URL}/login`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ officerId, password }),
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-store",
+          },
+          body: JSON.stringify({
+            officerId: officerId.trim(),
+            password: password.trim(),
+          }),
         }
       );
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Login failed");
+        throw new Error("Invalid Officer ID or Password");
       }
 
       const data = await response.json();
-      setLoggingIn(false);
       onLogin(data);
     } catch (err) {
+      setError(err.message || "Login failed");
+    } finally {
       setLoggingIn(false);
-      setError(err.message);
     }
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleLogin();
-    }
+    if (e.key === "Enter") handleLogin();
   };
 
   return (
@@ -66,78 +69,71 @@ const LoginPage = ({ onLogin }) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: `linear-gradient(135deg, ${deepBlue} 0%, ${darkCoral} 100%)`,
-        padding: { xs: 2, sm: 3 },
+        background: `linear-gradient(135deg, ${deepBlue}, ${darkCoral})`,
+        px: { xs: 1.5, sm: 0 }, // mobile side padding
       }}
     >
-      <Fade in={true} timeout={800}>
+      <Fade in timeout={600}>
         <Paper
           elevation={12}
           sx={{
             width: "100%",
-            maxWidth: { xs: "100%", sm: 420 },
-            p: { xs: 3, sm: 4 },
-            background: white,
+            maxWidth: { xs: "100%", sm: 420 }, // ✅ mobile friendly
+            p: { xs: 2.5, sm: 4 },              // ✅ less padding on mobile
             borderRadius: { xs: 3, sm: 4 },
-            boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
+            background: white,
           }}
         >
-          {/* Logo/Icon Section */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              mb: 3,
-            }}
-          >
+          {/* Icon */}
+          <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
             <Box
               sx={{
-                width: { xs: 70, sm: 80 },
-                height: { xs: 70, sm: 80 },
+                width: { xs: 64, sm: 80 },
+                height: { xs: 64, sm: 80 },
                 borderRadius: "50%",
-                background: `linear-gradient(135deg, ${deepBlue} 0%, ${darkCoral} 100%)`,
+                background: `linear-gradient(135deg, ${deepBlue}, ${darkCoral})`,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                boxShadow: "0 8px 24px rgba(30, 58, 138, 0.3)",
               }}
             >
-              <Person sx={{ fontSize: { xs: 36, sm: 42 }, color: white }} />
+              <Person
+                sx={{ fontSize: { xs: 32, sm: 42 }, color: white }}
+              />
             </Box>
           </Box>
 
+          {/* Title */}
           <Typography
-            variant="h4"
             align="center"
-            gutterBottom
             sx={{
               color: deepBlue,
               fontWeight: 700,
-              mb: 1,
-              fontSize: { xs: "1.75rem", sm: "2.125rem" },
+              fontSize: { xs: "1.5rem", sm: "2.1rem" }, // ✅ responsive font
             }}
           >
             Officer Login
           </Typography>
+
           <Typography
-            variant="body2"
             align="center"
             sx={{
               color: "text.secondary",
-              mb: 4,
-              fontSize: { xs: "0.875rem", sm: "1rem" },
+              mb: 3,
+              fontSize: { xs: "0.85rem", sm: "1rem" },
             }}
           >
             Enter your credentials to continue
           </Typography>
 
+          {/* Officer ID */}
           <TextField
             label="Officer ID"
             fullWidth
-            margin="normal"
             value={officerId}
             onChange={(e) => setOfficerId(e.target.value)}
             onKeyPress={handleKeyPress}
+            margin="normal"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -146,31 +142,22 @@ const LoginPage = ({ onLogin }) => {
               ),
             }}
             sx={{
-              mb: 2,
               "& .MuiOutlinedInput-root": {
-                borderRadius: 2,
                 backgroundColor: softGray,
-                transition: "all 0.3s ease",
-                "&:hover": {
-                  backgroundColor: white,
-                  boxShadow: "0 4px 12px rgba(30, 58, 138, 0.1)",
-                },
-                "&.Mui-focused": {
-                  backgroundColor: white,
-                  boxShadow: "0 4px 16px rgba(30, 58, 138, 0.2)",
-                },
+                borderRadius: 2,
               },
             }}
           />
 
+          {/* Password */}
           <TextField
             label="Password"
             type={showPassword ? "text" : "password"}
             fullWidth
-            margin="normal"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             onKeyPress={handleKeyPress}
+            margin="normal"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -180,106 +167,72 @@ const LoginPage = ({ onLogin }) => {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
-                    onClick={() => setShowPassword(!showPassword)}
-                    edge="end"
                     size="small"
+                    onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
-                      <VisibilityOff sx={{ color: deepBlue }} />
+                      <VisibilityOff />
                     ) : (
-                      <Visibility sx={{ color: deepBlue }} />
+                      <Visibility />
                     )}
                   </IconButton>
                 </InputAdornment>
               ),
             }}
             sx={{
-              mb: 1,
               "& .MuiOutlinedInput-root": {
-                borderRadius: 2,
                 backgroundColor: softGray,
-                transition: "all 0.3s ease",
-                "&:hover": {
-                  backgroundColor: white,
-                  boxShadow: "0 4px 12px rgba(30, 58, 138, 0.1)",
-                },
-                "&.Mui-focused": {
-                  backgroundColor: white,
-                  boxShadow: "0 4px 16px rgba(30, 58, 138, 0.2)",
-                },
+                borderRadius: 2,
               },
             }}
           />
 
           {error && (
-            <Fade in={!!error}>
-              <Typography
-                color="error"
-                variant="body2"
-                sx={{
-                  mt: 2,
-                  p: 1.5,
-                  bgcolor: "#fee2e2",
-                  borderRadius: 1,
-                  fontSize: { xs: "0.813rem", sm: "0.875rem" },
-                }}
-              >
-                {error}
-              </Typography>
-            </Fade>
+            <Typography
+              color="error"
+              sx={{
+                mt: 1.5,
+                fontSize: { xs: "0.8rem", sm: "0.9rem" },
+              }}
+            >
+              {error}
+            </Typography>
           )}
 
+          {/* Button */}
           <Button
             fullWidth
             variant="contained"
-            onClick={handleLogin}
             disabled={loggingIn || !officerId || !password}
+            onClick={handleLogin}
             sx={{
               mt: 3,
-              background: `linear-gradient(135deg, ${deepBlue} 0%, ${darkCoral} 100%)`,
-              color: white,
+              py: { xs: 1.2, sm: 1.5 },
+              fontSize: { xs: "0.95rem", sm: "1.05rem" },
               fontWeight: 700,
-              borderRadius: 2,
-              padding: { xs: "12px", sm: "14px" },
-              fontSize: { xs: "1rem", sm: "1.125rem" },
-              textTransform: "none",
-              transition: "all 0.3s ease",
-              boxShadow: "0 4px 14px rgba(30, 58, 138, 0.4)",
-              "&:hover": {
-                background: `linear-gradient(135deg, ${darkCoral} 0%, ${deepBlue} 100%)`,
-                transform: "translateY(-2px)",
-                boxShadow: "0 6px 20px rgba(30, 58, 138, 0.5)",
-              },
-              "&:active": {
-                transform: "translateY(0)",
-              },
-              "&:disabled": {
-                background: "#94a3b8",
-                color: white,
-              },
+              background: `linear-gradient(135deg, ${deepBlue}, ${darkCoral})`,
             }}
           >
             {loggingIn ? (
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <CircularProgress size={20} sx={{ color: white }} />
-                <span>Logging In...</span>
-              </Box>
+              <>
+                <CircularProgress size={20} sx={{ color: white, mr: 1 }} />
+                Logging In...
+              </>
             ) : (
               "Sign In"
             )}
           </Button>
 
-          <Box sx={{ mt: 3, textAlign: "center" }}>
-            <Typography
-              variant="caption"
-              sx={{
-                color: "text.secondary",
-                fontSize: { xs: "0.75rem", sm: "0.813rem" },
-              }}
-            >
-              Secure Authentication System v2.0
-            </Typography>
-          </Box>
+          <Typography
+            align="center"
+            sx={{
+              mt: 3,
+              fontSize: { xs: "0.7rem", sm: "0.8rem" },
+              color: "text.secondary",
+            }}
+          >
+            Secure Authentication System v2.0
+          </Typography>
         </Paper>
       </Fade>
     </Box>
