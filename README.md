@@ -1,70 +1,115 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# License Verification System (Police Dashboard)
 
-## Available Scripts
+## Overview
+The License Verification System is a web-based police dashboard developed using **React.js**.
+It allows authorities to verify driver license–related information through a cloud-based backend.
 
-In the project directory, you can run:
+The frontend of this application is deployed on **Vercel**, while the backend services are built and hosted on **AWS Cloud**.
+This project is developed for academic and demonstration purposes.
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Live Demo
+🔗 https://license-verification-system.vercel.app/
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## Demo Login Credentials
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+For testing and demonstration purposes, use the following credentials:
 
-### `npm run build`
+- **Officer ID:** officer101  
+- **Password:** password123  
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Tech Stack
 
-### `npm run eject`
+### Frontend
+- React.js
+- HTML
+- CSS
+- JavaScript
+- Create React App
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Backend (AWS Services)
+- AWS API Gateway
+- AWS Lambdaa
+- AWS DynamoDB
+- AWS S3
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Features
+- Secure login interface (demo-based)
+- Police dashboard for license verification
+- Real-time data fetching from AWS backend
+- Cloud-based and scalable architecture
+- Modular and maintainable frontend design
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## System Architecture
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+React Frontend | v AWS API Gateway | v AWS Lambda | v DynamoDB / S3
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## Project Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+License-Verification-System/ 
+│
+├── public/
+├── src/
+├── LoginPage.js
+├── App.js
+│ └── index.js
+├── package.json
+├── package-lock.json
+├── .gitignore
+└── README.md
 
-### Analyzing the Bundle Size
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Getting Started (Run Locally)
 
-### Making a Progressive Web App
+### Prerequisites
+- Node.js
+- npm
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Steps
 
-### Advanced Configuration
+npm install  
+npm start  
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+The application will run at:  
+http://localhost:3000
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Deployment
 
-### `npm run build` fails to minify
+- Frontend deployed using **Vercel**
+- Backend deployed using **AWS Lambda, API Gateway, DynamoDB, and S3**
+- Frontend communicates securely with AWS-hosted REST APIs
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+
+## Security Note
+Sensitive data such as:
+- AWS credentials
+- Environment variables
+- Image datasets (driver faces)
+
+are **not included in this repository** and are securely managed using AWS services.
+
+---
+
+## Author
+Ajinkya Dahiwal  
+Saiel Bhor
+Aditya Chaudhari
+Archisha Dutta
+B.Tech – Computer Science & Engineering
